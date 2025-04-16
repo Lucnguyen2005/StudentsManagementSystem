@@ -1,9 +1,15 @@
 package Com.btec.assignment.lucnt;
 import java.util.*;
 public class ManagementStudent {
-    private ArrayList<Student> students = new ArrayList<>();
-    private HashMap<String, Student> studentMap = new HashMap<>();
-    public void addStudent(Student s) {
+    private ArrayList<Students> students = new ArrayList<>();
+    private HashMap<String, Students> studentMap = new HashMap<>();
+
+    public void addStudent(Students s) {
+        // Validate score range
+        if(s.getMarks() < 0 || s.getMarks() > 10) {
+            System.out.println("Invalid score. Score must be between 0 and 10.");
+            return;
+        }
         if (!studentMap.containsKey(s.getStudentId())) {
             students.add(s);
             studentMap.put(s.getStudentId(), s);
@@ -13,7 +19,7 @@ public class ManagementStudent {
         }
     }
     public void deleteStudent(String id) {
-        Student s = studentMap.get(id);
+        Students s = studentMap.get(id);
         if (s != null) {
             students.remove(s);
             studentMap.remove(id);
@@ -23,35 +29,44 @@ public class ManagementStudent {
         }
     }
     public void updateStudent(String id, String newName, double newScore) {
-        Student s = studentMap.get(id);
+        // Validate updated score
+        if(newScore < 0 || newScore > 10) {
+            System.out.println("Invalid score. Score must be between 0 and 10.");
+            return;
+        }
+        Students s = studentMap.get(id);
         if (s != null) {
             s.setFullName(newName);
-            s.setMarks(newScore); // use setMarks()
+            s.setMarks(newScore);
             System.out.println("Student updated.");
         } else {
             System.out.println("Student not found.");
         }
     }
     public void displayAllStudents() {
-        for (Student s : students) {
-            System.out.println(s);
+        if(students.isEmpty()){
+            System.out.println("No students to display.");
+        } else {
+            for (Students s : students) {
+                System.out.println(s);
+            }
         }
     }
     public void sortStudentsByScore() {
-        students.sort((a, b) -> Double.compare(b.getMarks(), a.getMarks())); // use getMarks()
+        // Sorting in descending order based on marks
+        students.sort((a, b) -> Double.compare(b.getMarks(), a.getMarks()));
         System.out.println("Students sorted by score:");
         displayAllStudents();
     }
     public void searchStudent(String id) {
-        Student s = studentMap.get(id);
+        Students s = studentMap.get(id);
         if (s != null) {
             System.out.println("Student found: " + s);
         } else {
             System.out.println("Student not found.");
         }
     }
-}
-    class Main {
+
     public static void main(String[] args) {
         ManagementStudent manager = new ManagementStudent();
         Scanner sc = new Scanner(System.in);
@@ -65,11 +80,13 @@ public class ManagementStudent {
             System.out.println("6. Search by ID");
             System.out.println("0. Exit");
             System.out.print("Choose: ");
+            
             while (!sc.hasNextInt()) {
                 System.out.print("Invalid input. Please enter a number: ");
                 sc.next(); // discard invalid input
             }
-            choice = sc.nextInt(); sc.nextLine(); // consume newline
+            choice = sc.nextInt();
+            sc.nextLine(); // consume newline          
             switch (choice) {
                 case 1:
                     System.out.print("ID: ");
@@ -77,21 +94,24 @@ public class ManagementStudent {
                     System.out.print("Name: ");
                     String name = sc.nextLine();
                     System.out.print("Score: ");
-                    double score = sc.nextDouble(); sc.nextLine();
-                    manager.addStudent(new Student(id, name, score));
+                    double score = sc.nextDouble();
+                    sc.nextLine(); // consume newline
+                    manager.addStudent(new Students(id, name, score));
                     break;
                 case 2:
                     System.out.print("ID to delete: ");
-                    manager.deleteStudent(sc.nextLine());
+                    String deleteId = sc.nextLine();
+                    manager.deleteStudent(deleteId);
                     break;
                 case 3:
                     System.out.print("ID to update: ");
-                    String uid = sc.nextLine();
+                    String updateId = sc.nextLine();
                     System.out.print("New Name: ");
                     String newName = sc.nextLine();
                     System.out.print("New Score: ");
-                    double newScore = sc.nextDouble(); sc.nextLine();
-                    manager.updateStudent(uid, newName, newScore);
+                    double newScore = sc.nextDouble();
+                    sc.nextLine(); // consume newline
+                    manager.updateStudent(updateId, newName, newScore);
                     break;
                 case 4:
                     manager.displayAllStudents();
@@ -101,7 +121,8 @@ public class ManagementStudent {
                     break;
                 case 6:
                     System.out.print("ID to search: ");
-                    manager.searchStudent(sc.nextLine());
+                    String searchId = sc.nextLine();
+                    manager.searchStudent(searchId);
                     break;
                 case 0:
                     System.out.println("Exiting system...");
