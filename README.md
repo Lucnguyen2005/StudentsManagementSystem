@@ -82,9 +82,6 @@ ID to search: 12345
 Student found: ID: 12345, Name: John Doe, Marks: 8.5, Rank: Very Good
 ```
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 - The project was created as part of an assignment for the Pearson BTEC Level 5 HND in Computing.
 - Thanks to the contributors and mentors who provided guidance and feedback during the development of this system.
